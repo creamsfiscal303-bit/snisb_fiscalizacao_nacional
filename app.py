@@ -232,7 +232,26 @@ def distribute_by_municipality(df: pd.DataFrame, names: list[str], assignment_co
 st.set_page_config(page_title="Fiscalização de Barragens | SNISB", page_icon="🗺️", layout="wide")
 st.title("Painel de Fiscalização de Barragens — SNISB")
 st.caption("Ferramenta de apoio ao planejamento da fiscalização do exercício profissional. A categoria de risco é informativa e não representa avaliação estrutural do CREA.")
+st.info(
+    "Base normativa: Decisão Plenária Confea nº PL-2516/2025 — "
+    "aprova a Nota Técnica para fiscalização de barragens pelo Sistema Confea/Crea."
+)
 
+col1, col2 = st.columns(2)
+
+with col1:
+    st.link_button(
+        "📄 Consultar decisão PL-2516/2025",
+        "https://normativos.confea.org.br/Ementas/Visualizar?id=82626",
+        use_container_width=True
+    )
+
+with col2:
+    st.link_button(
+        "📘 Consultar Nota Técnica de Barragens",
+        "https://www.confea.org.br/midias/uploads-imce/GPF/Nota%20T%C3%A9cnica%20Barragens.pdf",
+        use_container_width=True
+    )
 with st.sidebar:
     st.header("Consulta")
     uf = st.selectbox("Unidade da Federação", UF_OPTIONS, index=UF_OPTIONS.index("CE"))
@@ -297,8 +316,51 @@ c3.metric("Risco alto ou muito alto", int(filtered["RISCO_EXIBICAO"].isin(["Alto
 c4.metric("Dano potencial alto", int(filtered[dpa_col].map(normalize).str.contains("ALTO", na=False).sum()) if dpa_col else "N/D")
 c5.metric("Sem categoria de risco", int((filtered["RISCO_EXIBICAO"] == "Não informado").sum()))
 
-tab_map, tab_data, tab_export, tab_about = st.tabs(["🗺️ Mapa", "📋 Dados", "📥 Exportar Excel", "ℹ️ Orientações"])
+tab_map, tab_data, tab_export, tab_norma, tab_about = st.tabs([
+    "🗺️ Mapa",
+    "📋 Dados",
+    "📥 Exportar Excel",
+    "📚 Base normativa",
+    "ℹ️ Orientações"
+])
+with tab_norma:
+    st.header("Base normativa da fiscalização de barragens")
 
+    st.subheader("Decisão Plenária Confea nº PL-2516/2025")
+
+    st.write(
+        "A decisão aprova a Nota Técnica que estabelece critérios e "
+        "procedimentos técnicos e operacionais para a fiscalização dos "
+        "Creas em barragens destinadas à acumulação de água, disposição "
+        "de rejeitos e acumulação de resíduos industriais."
+    )
+
+    st.markdown("""
+    **Aplicação no planejamento da fiscalização:**
+
+    1. Consultar os dados disponíveis no SNISB.
+    2. Planejar as ações de fiscalização do exercício profissional.
+    3. Verificar a responsabilidade técnica e as atividades profissionais
+       relacionadas ao empreendimento.
+    4. Solicitar documentos e providências quando necessário.
+    5. Registrar os fatos constatados e os elementos comprobatórios
+       da fiscalização.
+
+    **Atenção:** a classificação de risco e o dano potencial associado
+    são informações para subsidiar o planejamento. Não constituem,
+    isoladamente, prova de infração profissional nem avaliação da
+    segurança estrutural da barragem.
+    """)
+
+    st.link_button(
+        "Acessar decisão oficial no Confea",
+        "https://normativos.confea.org.br/Ementas/Visualizar?id=82626"
+    )
+
+    st.link_button(
+        "Abrir Nota Técnica oficial",
+        "https://www.confea.org.br/midias/uploads-imce/GPF/Nota%20T%C3%A9cnica%20Barragens.pdf"
+    )
 with tab_map:
     st.subheader("Localização das barragens por categoria de risco")
     st.markdown("🔴 **Alto** / 🔴 **Muito alto** · 🟠 **Médio** · 🟢 **Baixo** · ⚪ **Não informado**")
