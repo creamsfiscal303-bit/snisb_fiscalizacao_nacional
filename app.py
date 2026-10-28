@@ -205,8 +205,9 @@ def format_workbook(filtered: pd.DataFrame, uf: str, include_group_sheets: bool 
                     if isinstance(cell.value, str) and cell.value.startswith("https://"):
                         cell.hyperlink = cell.value
                         cell.style = "Hyperlink"
-    return output.getvalue()
-        normativa = pd.DataFrame([
+                      #coloquei aqui
+
+    normativa = pd.DataFrame([
             ["Documento", "Decisão Plenária Confea nº PL-2516/2025"],
             ["Objeto", "Aprova a Nota Técnica para fiscalização de barragens pelo Sistema Confea/Crea"],
             ["Referência oficial", "https://normativos.confea.org.br/Ementas/Visualizar?id=82626"],
@@ -215,8 +216,10 @@ def format_workbook(filtered: pd.DataFrame, uf: str, include_group_sheets: bool 
             ["Limite de uso", "Os dados do SNISB não comprovam, isoladamente, infração profissional nem segurança ou insegurança estrutural."]
         ], columns=["Item", "Descrição"])
 
-        normativa.to_excel(writer, sheet_name="Base normativa", index=False)
-
+    normativa.to_excel(writer, sheet_name="Base normativa", index=False)
+  
+    return output.getvalue()
+  
 def distribute_by_municipality(df: pd.DataFrame, names: list[str], assignment_col: str) -> pd.DataFrame:
     """Distribui municípios inteiros entre responsáveis, tentando equilibrar a quantidade de barragens."""
     result = df.copy()
